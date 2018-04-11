@@ -3,6 +3,7 @@ import os
 import urllib.request
 import zipfile
 import subprocess
+import shutil
 
 quitnow = False
 serverok = False
@@ -82,7 +83,7 @@ while (quitnow == False):
         os.makedirs(tempdir)
         os.makedirs(pkgdir)
     else:
-        os.removedirs(tempdir)
+        shutil.rmtree(tempdir, ignore_errors=True)
         os.makedirs(tempdir)
         os.makedirs(pkgdir)
     print("- Done.")
