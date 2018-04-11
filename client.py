@@ -7,6 +7,7 @@ import shutil
 
 quitnow = False
 serverok = False
+quicall = 0
 
 tempdir = "C:\webexetemp"
 pkgdir = tempdir + "\package"
@@ -61,45 +62,69 @@ while (quitnow == False):
         for i in splitlist:
             print(i)
         print("")
-        print("Enter an AppID:")
+        print("Enter an AppID (or \"/quit\" to exit):")
         app2launch = input(">>> ")
 
-        print("")
-        print("")
-        print("")
-        print("Verifying the app exists . . .")
-        for i in splitlist:
-            testtxt = i.split(":")
-            if (testtxt[0] == app2launch):
-                appvalid = True
-        if (appvalid == True):
-            print("- App exists.")
+        if (app2launch == "/quit"):
+            quitnow = True
+            quicall = 1
+            appvalid = True
         else:
-            print("- App does not exist.")
+            print("")
+            print("")
+            print("")
+            print("Verifying the app exists . . .")
+            for i in splitlist:
+                testtxt = i.split(":")
+                if (testtxt[0] == app2launch):
+                    appvalid = True
+            if (appvalid == True):
+                print("- App exists.")
+            else:
+                print("- App does not exist.")
 
-    print("")
-    print("Prepping temp folder . . .")
-    if not os.path.exists(tempdir):
-        os.makedirs(tempdir)
-        os.makedirs(pkgdir)
-    else:
-        shutil.rmtree(tempdir, ignore_errors=True)
-        os.makedirs(tempdir)
-        os.makedirs(pkgdir)
-    print("- Done.")
+    if (quicall == 0):
 
-    print("")
-    print("Downloading app package . . .")
-    urllib.request.urlretrieve(serverurl+"/app/"+app2launch+".zip", zipdir)
-    print("- Done.")
+        print("")
+        print("Prepping temp folder . . .")
+        if not os.path.exists(tempdir):
+            os.makedirs(tempdir)
+            os.makedirs(pkgdir)
+        else:
+            shutil.rmtree(tempdir, ignore_errors=True)
+            os.makedirs(tempdir)
+            os.makedirs(pkgdir)
+        print("- Done.")
 
-    print("")
-    print("Extracting app package . . .")
-    with zipfile.ZipFile(zipdir,"r") as zipref:
-        zipref.extractall(pkgdir)
-    print("- Done.")
+        print("")
+        print("Downloading app package . . .")
+        urllib.request.urlretrieve(serverurl+"/app/"+app2launch+".zip", zipdir)
+        print("- Done.")
 
-    print("")
-    print("Executing application . . .")
-    subprocess.run(exedir)
-    print("- Completed.")
+        print("")
+        print("Extracting app package . . .")
+        with zipfile.ZipFile(zipdir,"r") as zipref:
+            zipref.extractall(pkgdir)
+        print("- Done.")
+
+        print("")
+        print("Executing application . . .")
+        subprocess.run(exedir)
+        print("- Completed.")
+
+print("")
+print("")
+print("")
+print("Cleaning up . . .")
+if not os.path.exists(tempdir):
+    os.makedirs(tempdir)
+    os.makedirs(pkgdir)
+else:
+    shutil.rmtree(tempdir, ignore_errors=True)
+    os.makedirs(tempdir)
+    os.makedirs(pkgdir)
+print("- Done.")
+
+print("")
+print("Quitting . . .")
+quit()
